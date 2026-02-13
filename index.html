@@ -3,347 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amorův lov na dopisy - OPRAVENO</title>
+    <title>Amorův šíp</title>
     <style>
-        :root {
-            --gold: #ffd700;
-            --heart-red: #ff3366;
-            --skin: #ffe0bd;
-        }
-
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background: radial-gradient(circle, #ffafbd, #ffc3a0);
-            height: 100vh;
-            width: 100vw;
+            background-color: #e0f7fa; /* Světle modré pozadí */
             cursor: none; /* Skryje výchozí kurzor */
-            user-select: none;
         }
 
-        /* --- AMOR (POSTAVA) --- */
-        #cupid {
+        /* Vlastní kurzor - luk se šípem */
+        #custom-cursor {
             position: fixed;
-            width: 100px;
-            height: 100px;
-            pointer-events: none;
-            z-index: 9999;
+            pointer-events: none; /* Aby neblokoval interakce */
+            width: 50px; /* Přizpůsobit velikost */
+            height: 50px;
+            background-image: url('image_4.png'); /* Použití obrázku luku se šípem */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 1000;
             transform: translate(-50%, -50%);
-            display: block; /* Ujistíme se, že je vidět */
         }
 
-        .cupid-head {
+        /* Létající obálka */
+        #flying-envelope {
             position: absolute;
-            width: 30px;
-            height: 30px;
-            background: var(--skin);
-            border-radius: 50%;
-            top: 5px;
-            left: 35px;
-            box-shadow: inset -2px -2px 5px rgba(0,0,0,0.1);
-        }
-
-        /* Vlasy */
-        .cupid-head::after {
-            content: '☁☁';
-            position: absolute;
-            top: -8px;
-            left: -2px;
-            color: #d35400;
-            font-size: 20px;
-            letter-spacing: -2px;
-        }
-
-        /* Oko a mrkání */
-        .eye {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #333;
-            border-radius: 50%;
-            top: 12px;
-            left: 18px;
-            animation: blink 3s infinite;
-        }
-
-        @keyframes blink {
-            0%, 90%, 100% { transform: scaleY(1); }
-            95% { transform: scaleY(0.1); }
-        }
-
-        .cupid-body {
-            position: absolute;
-            width: 25px;
-            height: 35px;
-            background: var(--skin);
-            border-radius: 10px;
-            top: 32px;
-            left: 38px;
-        }
-
-        /* Křídla Amora */
-        .wing {
-            position: absolute;
-            width: 45px;
-            height: 25px;
-            background: #fff;
-            border-radius: 50% 50% 10% 50%;
-            top: 25px;
-            z-index: -1;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .wing-left { 
-            left: 5px; 
-            animation: flapLeft 0.2s infinite alternate; 
-            transform-origin: right center;
-        }
-        .wing-right { 
-            right: 5px; 
-            animation: flapRight 0.2s infinite alternate; 
-            transform-origin: left center;
-            transform: scaleX(-1);
-        }
-
-        @keyframes flapLeft { from { transform: rotate(15deg); } to { transform: rotate(-25deg); } }
-        @keyframes flapRight { from { transform: scaleX(-1) rotate(15deg); } to { transform: scaleX(-1) rotate(-25deg); } }
-
-        /* Luk */
-        .bow {
-            position: absolute;
-            width: 4px;
+            width: 60px; /* Přizpůsobit velikost */
             height: 40px;
-            border-left: 3px solid #8b4513;
-            border-radius: 50%;
-            left: 65px;
-            top: 30px;
-            transform: rotate(-15deg);
+            background-image: url('image_3.png'); /* Použití obrázku obálky s křídly a srdíčkem */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transition: top 2s linear, left 2s linear; /* Plynulý pohyb */
         }
 
-        /* --- OBÁLKA --- */
-        #envelope {
+        /* Vystřelený šíp */
+        .projectile {
             position: absolute;
-            width: 50px;
-            height: 35px;
-            background: #fff;
-            border: 1px solid #ddd;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            top: 50%; /* Startovní pozice */
-            left: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .envelope::before { /* Klopa */
-            content: "";
-            position: absolute;
-            top: 0; left: 0;
-            border-left: 25px solid transparent;
-            border-right: 25px solid transparent;
-            border-top: 18px solid #eee;
-        }
-
-        .env-heart {
-            color: var(--heart-red);
-            font-size: 18px;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Křídla obálky */
-        .env-wing {
-            position: absolute;
-            width: 60px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid var(--gold);
-            border-radius: 50% 50% 0 0;
-            top: -15px;
-        }
-        .env-wing.l { left: -50px; animation: eFlap 0.1s infinite alternate; transform-origin: right bottom; }
-        .env-wing.r { right: -50px; animation: eFlap 0.1s infinite alternate; transform-origin: left bottom; transform: scaleX(-1); }
-
-        @keyframes eFlap { from { transform: rotate(-40deg); } to { transform: rotate(10deg); } }
-
-        /* --- ŠÍP --- */
-        .arrow {
-            position: absolute;
-            width: 40px;
-            height: 3px;
-            background: #8b4513;
-            z-index: 50;
+            width: 20px;
+            height: 5px;
+            background-color: #8b4513; /* Hnědá barva šípu */
+            border-radius: 2px;
             pointer-events: none;
         }
-        .arrow::after {
-            content: '❤';
-            position: absolute;
-            right: -10px;
-            top: -8px;
-            color: var(--heart-red);
-            font-size: 14px;
-        }
-
-        /* Částice */
+        
+        /* Částice - srdíčka */
         .particle {
             position: absolute;
+            color: #ff0000; /* Červená barva srdíček */
+            font-size: 16px;
             pointer-events: none;
-            z-index: 200;
-        }
-
-        .hint {
-            position: fixed;
-            bottom: 20px;
-            width: 100%;
-            text-align: center;
-            color: #fff;
-            font-family: sans-serif;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            user-select: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="cupid">
-        <div class="wing wing-left"></div>
-        <div class="wing wing-right"></div>
-        <div class="cupid-body"></div>
-        <div class="cupid-head">
-            <div class="eye"></div>
-        </div>
-        <div class="bow"></div>
-    </div>
-
-    <div id="envelope">
-        <div class="env-wing l"></div>
-        <div class="env-wing r"></div>
-        <div class="env-heart">❤</div>
-    </div>
-
-    <div class="hint">Pohybuj myší a klikni pro výstřel!</div>
+    <div id="custom-cursor"></div>
+    <div id="flying-envelope"></div>
 
     <script>
-        const cupid = document.getElementById('cupid');
-        const envelope = document.getElementById('envelope');
-        
-        // Inicializace pozic
-        let envX = window.innerWidth / 2;
-        let envY = window.innerHeight / 2;
-        let envSpeedX = 6;
-        let envSpeedY = 4;
-        let isDead = false;
+        const cursor = document.getElementById('custom-cursor');
+        const envelope = document.getElementById('flying-envelope');
+        let envelopeX = window.innerWidth / 2;
+        let envelopeY = window.innerHeight / 2;
 
-        // 1. Sledování myši (Amor)
-        window.addEventListener('mousemove', (e) => {
-            cupid.style.left = e.clientX + 'px';
-            cupid.style.top = e.clientY + 'px';
+        // Sledování pohybu myši
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
         });
 
-        // 2. Pohyb obálky
-        function update() {
-            if (!isDead) {
-                envX += envSpeedX;
-                envY += envSpeedY;
+        // Pohyb obálky
+        function moveEnvelope() {
+            const maxX = window.innerWidth - envelope.offsetWidth;
+            const maxY = window.innerHeight - envelope.offsetHeight;
+            
+            const nextX = Math.random() * maxX;
+            const nextY = Math.random() * maxY;
 
-                // Odrazy
-                if (envX <= 50 || envX >= window.innerWidth - 100) envSpeedX *= -1;
-                if (envY <= 50 || envY >= window.innerHeight - 80) envSpeedY *= -1;
+            envelope.style.left = nextX + 'px';
+            envelope.style.top = nextY + 'px';
+            
+            envelopeX = nextX;
+            envelopeY = nextY;
 
-                envelope.style.left = envX + 'px';
-                envelope.style.top = envY + 'px';
-            }
-            requestAnimationFrame(update);
+            setTimeout(moveEnvelope, 2000); // Pohyb každé 2 sekundy
         }
+        moveEnvelope();
 
-        // 3. Střelba
-        window.addEventListener('mousedown', (e) => {
-            if (isDead) return;
+        // Střelba po kliknutí
+        document.addEventListener('click', (e) => {
+            const startX = e.clientX;
+            const startY = e.clientY;
+            
+            const targetX = envelopeX + envelope.offsetWidth / 2;
+            const targetY = envelopeY + envelope.offsetHeight / 2;
 
+            shootArrow(startX, startY, targetX, targetY);
+        });
+
+        function shootArrow(startX, startY, targetX, targetY) {
             const arrow = document.createElement('div');
-            arrow.className = 'arrow';
-            
-            // Start od Amora
-            let startX = e.clientX;
-            let startY = e.clientY;
-            
-            arrow.style.left = startX + 'px';
-            arrow.style.top = startY + 'px';
+            arrow.classList.add('projectile');
             document.body.appendChild(arrow);
 
-            // Výpočet směru k obálce
-            const targetX = envX + 25;
-            const targetY = envY + 17;
-            const angle = Math.atan2(targetY - startY, targetX - startX);
-            
+            arrow.style.left = startX + 'px';
+            arrow.style.top = startY + 'px';
+
+            const dx = targetX - startX;
+            const dy = targetY - startY;
+            const angle = Math.atan2(dy, dx);
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const speed = 10; // Rychlost šípu
+            const duration = distance / speed * 10; // Trvání letu
+
             arrow.style.transform = `rotate(${angle}rad)`;
 
-            let curX = startX;
-            let curY = startY;
-            const speed = 18;
+            arrow.animate([
+                { left: startX + 'px', top: startY + 'px' },
+                { left: targetX + 'px', top: targetY + 'px' }
+            ], {
+                duration: duration,
+                easing: 'linear',
+                fill: 'forwards'
+            }).onfinish = () => {
+                arrow.remove();
+                checkHit();
+            };
+        }
 
-            function moveArrow() {
-                curX += Math.cos(angle) * speed;
-                curY += Math.sin(angle) * speed;
-                arrow.style.left = curX + 'px';
-                arrow.style.top = curY + 'px';
+        function checkHit() {
+            // Pro jednoduchost předpokládáme zásah, pokud byl výstřel na obálku
+            createExplosion(envelopeX + envelope.offsetWidth / 2, envelopeY + envelope.offsetHeight / 2);
+        }
 
-                // Kolize
-                const d = Math.hypot(curX - (envX + 25), curY - (envY + 17));
-                if (d < 35) {
-                    hit();
-                    arrow.remove();
+        function createExplosion(x, y) {
+            for (let i = 0; i < 20; i++) {
+                createParticle(x, y);
+            }
+        }
+
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.innerHTML = '❤️';
+            document.body.appendChild(particle);
+            
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 5 + 2;
+            const life = Math.random() * 1000 + 500;
+            
+            let posX = x;
+            let posY = y;
+
+            const startTime = Date.now();
+
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                if (elapsed > life) {
+                    particle.remove();
                     return;
                 }
 
-                if (curX < 0 || curX > window.innerWidth || curY < 0 || curY > window.innerHeight) {
-                    arrow.remove();
-                } else {
-                    requestAnimationFrame(moveArrow);
-                }
-            }
-            moveArrow();
-        });
+                posX += Math.cos(angle) * speed;
+                posY += Math.sin(angle) * speed + 1; // Gravitace
 
-        function hit() {
-            isDead = true;
-            envelope.style.display = 'none';
-            
-            // Vyprsknutí srdíček
-            for(let i=0; i<80; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                p.innerHTML = '❤';
-                p.style.color = `hsl(${Math.random()*360}, 100%, 50%)`;
-                document.body.appendChild(p);
-                
-                let px = envX + 25;
-                let py = envY + 17;
-                let vx = (Math.random() - 0.5) * 20;
-                let vy = (Math.random() - 0.5) * 20;
-                
-                function animP() {
-                    px += vx; py += vy; vy += 0.5;
-                    p.style.left = px + 'px';
-                    p.style.top = py + 'px';
-                    p.style.opacity = (p.style.opacity || 1) - 0.02;
-                    if(p.style.opacity > 0) requestAnimationFrame(animP);
-                    else p.remove();
-                }
-                animP();
-            }
+                particle.style.left = posX + 'px';
+                particle.style.top = posY + 'px';
+                particle.style.opacity = 1 - elapsed / life;
 
-            setTimeout(() => {
-                isDead = false;
-                envX = Math.random() * (window.innerWidth - 150) + 50;
-                envY = Math.random() * (window.innerHeight - 150) + 50;
-                envelope.style.display = 'flex';
-            }, 1500);
+                requestAnimationFrame(animate);
+            }
+            requestAnimationFrame(animate);
         }
-
-        // Spuštění
-        update();
     </script>
 </body>
 </html>
