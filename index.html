@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amorův lov na dopisy</title>
+    <title>Amorův lov se zvukem</title>
     <style>
         :root {
             --gold: #ffd700;
             --pink: #ffafbd;
             --heart-red: #ff3366;
+            --skin: #ffe0bd;
+            --hair: #e67e22;
         }
 
         body {
@@ -17,16 +19,16 @@
             overflow: hidden;
             background: radial-gradient(circle, #ffafbd, #ffc3a0);
             height: 100vh;
-            cursor: none; /* Skryje výchozí kurzor */
+            cursor: none;
             font-family: 'Arial', sans-serif;
             user-select: none;
         }
 
-        /* --- AMOR (TVŮJ KURZOR) --- */
+        /* --- AMOR (CHLAP SVALOUŠ) --- */
         #cupid-container {
             position: fixed;
-            width: 80px;
-            height: 80px;
+            width: 120px;
+            height: 120px;
             pointer-events: none;
             z-index: 1000;
             transform: translate(-50%, -50%);
@@ -35,150 +37,129 @@
 
         .cupid-body {
             position: absolute;
+            width: 38px;
+            height: 55px;
+            background: var(--skin);
+            border-radius: 12px 12px 22px 22px;
+            top: 30px;
+            left: 40px;
+            box-shadow: inset 6px 0 12px rgba(0,0,0,0.1);
+        }
+        
+        /* Svaly hrudníku */
+        .cupid-body::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 4px;
             width: 30px;
-            height: 40px;
-            background: #ffe0bd;
-            border-radius: 15px;
-            top: 20px;
-            left: 25px;
+            height: 18px;
+            border-bottom: 2px solid rgba(0,0,0,0.15);
+            border-radius: 50%;
+        }
+
+        .loincloth {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 18px;
+            background: var(--heart-red);
+            border-radius: 0 0 22px 22px;
         }
 
         .cupid-head {
             position: absolute;
-            width: 25px;
-            height: 25px;
-            background: #ffe0bd;
-            border-radius: 50%;
-            top: 0;
-            left: 27px;
-        }
-
-        /* Kudrlinky */
-        .cupid-head::before {
-            content: '☁';
-            position: absolute;
+            width: 32px;
+            height: 38px;
+            background: var(--skin);
+            border-radius: 50% 50% 45% 45%;
             top: -5px;
-            color: #f39c12;
-            font-size: 20px;
+            left: 43px;
+            z-index: 2;
         }
 
-        /* Mrkající oko */
-        .eye {
+        .cupid-head::before {
+            content: '☁☁☁';
             position: absolute;
-            width: 3px;
-            height: 3px;
-            background: #333;
-            border-radius: 50%;
-            top: 10px;
-            left: 15px;
-            animation: blink 4s infinite;
+            top: -12px;
+            left: -5px;
+            color: var(--hair);
+            font-size: 26px;
+            text-shadow: 6px 3px 0 var(--hair), -6px 3px 0 var(--hair);
         }
 
-        @keyframes blink {
-            0%, 90%, 100% { height: 3px; }
-            95% { height: 1px; }
-        }
+        .face { position: relative; width: 100%; height: 100%; }
+        .eye { position: absolute; width: 4px; height: 5px; background: #333; border-radius: 50%; top: 18px; }
+        .eye.l { left: 9px; }
+        .eye.r { right: 9px; animation: blink 3s infinite; }
+        .smile { position: absolute; width: 12px; height: 6px; border-bottom: 2px solid #b33939; border-radius: 50%; bottom: 8px; left: 10px; }
 
-        /* Křídla Amora */
+        @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+
+        /* KŘÍDLA - Detailnější peří */
         .cupid-wing {
             position: absolute;
-            width: 40px;
-            height: 20px;
-            background: white;
-            border-radius: 20px 20px 0 20px;
+            width: 70px;
+            height: 45px;
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            clip-path: polygon(100% 50%, 95% 20%, 80% 5%, 50% 10%, 25% 30%, 5% 60%, 0% 80%, 15% 95%, 40% 90%, 75% 70%);
             top: 15px;
             z-index: -1;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
 
-        .wing-l { left: -10px; animation: flapL 0.2s infinite alternate; transform-origin: right; }
-        .wing-r { right: -10px; animation: flapR 0.2s infinite alternate; transform-origin: left; transform: scaleX(-1); }
+        .wing-l { left: -15px; animation: flapL 0.25s infinite alternate; transform-origin: right center; }
+        .wing-r { right: -15px; animation: flapR 0.25s infinite alternate; transform-origin: left center; transform: scaleX(-1); }
 
-        @keyframes flapL { from { transform: rotate(10deg); } to { transform: rotate(-30deg); } }
-        @keyframes flapR { from { transform: scaleX(-1) rotate(10deg); } to { transform: scaleX(-1) rotate(-30deg); } }
+        @keyframes flapL { from { transform: rotate(25deg); } to { transform: rotate(-15deg); } }
+        @keyframes flapR { from { transform: scaleX(-1) rotate(25deg); } to { transform: scaleX(-1) rotate(-15deg); } }
 
-        /* Luk */
         .bow {
             position: absolute;
-            width: 30px;
-            height: 40px;
-            border-left: 3px solid #8b4513;
-            border-radius: 50%;
-            left: 50px;
+            width: 12px;
+            height: 60px;
+            border-left: 5px solid #8b4513;
+            border-radius: 45%;
+            left: 80px;
             top: 20px;
-            transform: rotate(-10deg);
+            transform: rotate(-15deg);
         }
 
-        /* --- OBÁLKA (ZLATONKA STYL) --- */
+        /* --- OBÁLKA --- */
         #envelope {
             position: absolute;
-            width: 40px;
-            height: 25px;
+            width: 45px;
+            height: 30px;
             background: white;
-            border: 2px solid #ddd;
+            border: 2px solid #eee;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
             z-index: 10;
         }
 
-        .envelope-heart {
-            color: var(--heart-red);
-            font-size: 14px;
-        }
+        .envelope-heart { color: var(--heart-red); font-size: 16px; }
 
         .env-wing {
             position: absolute;
-            width: 50px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.8);
+            width: 55px;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.9);
             border: 1px solid var(--gold);
             border-radius: 50% 50% 0 0;
-            top: -10px;
+            top: -12px;
         }
-
-        .env-wing.l { left: -45px; animation: envFlap 0.1s infinite alternate; transform-origin: right bottom; }
-        .env-wing.r { right: -45px; animation: envFlap 0.1s infinite alternate; transform-origin: left bottom; transform: scaleX(-1); }
-
-        @keyframes envFlap { from { transform: rotate(-40deg); } to { transform: rotate(20deg); } }
+        .env-wing.l { left: -50px; animation: envFlap 0.1s infinite alternate; transform-origin: right bottom; }
+        .env-wing.r { right: -50px; animation: envFlap 0.1s infinite alternate; transform-origin: left bottom; transform: scaleX(-1); }
+        @keyframes envFlap { from { transform: rotate(-45deg); } to { transform: rotate(15deg); } }
 
         /* --- ŠÍP --- */
-        .arrow {
-            position: absolute;
-            width: 40px;
-            height: 3px;
-            background: #8b4513;
-            z-index: 5;
-            pointer-events: none;
-        }
+        .arrow { position: absolute; width: 45px; height: 3px; background: #8b4513; z-index: 5; pointer-events: none; }
+        .arrow::after { content: '❤'; position: absolute; right: -8px; top: -10px; color: var(--heart-red); font-size: 18px; }
 
-        .arrow::after {
-            content: '';
-            position: absolute;
-            right: -5px;
-            top: -4px;
-            border-left: 10px solid var(--heart-red);
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-        }
-
-        /* --- SRDÍČKA --- */
-        .particle {
-            position: absolute;
-            color: var(--heart-red);
-            pointer-events: none;
-            font-size: 20px;
-        }
-
-        .ui-text {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            text-align: center;
-            color: white;
-            font-weight: bold;
-            text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
-        }
+        .particle { position: absolute; color: var(--heart-red); pointer-events: none; font-size: 20px; }
+        .ui-text { position: absolute; bottom: 20px; width: 100%; text-align: center; color: white; font-weight: bold; text-shadow: 1px 1px 4px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
@@ -186,9 +167,13 @@
     <div id="cupid-container">
         <div class="cupid-wing wing-l"></div>
         <div class="cupid-wing wing-r"></div>
-        <div class="cupid-body"></div>
+        <div class="cupid-body"><div class="loincloth"></div></div>
         <div class="cupid-head">
-            <div class="eye"></div>
+            <div class="face">
+                <div class="eye l"></div>
+                <div class="eye r"></div>
+                <div class="smile"></div>
+            </div>
         </div>
         <div class="bow"></div>
     </div>
@@ -199,7 +184,7 @@
         <div class="envelope-heart">❤</div>
     </div>
 
-    <div class="ui-text">Klikni kamkoliv a Amor vystřelí!</div>
+    <div class="ui-text">Klikni a Amor vystřelí! (Zapni si zvuk)</div>
 
     <script>
         const cupid = document.getElementById('cupid-container');
@@ -207,75 +192,103 @@
         
         let envX = Math.random() * window.innerWidth;
         let envY = Math.random() * window.innerHeight;
-        let envSpeedX = 8; // Zrychleno
-        let envSpeedY = 6;
+        let envSpeedX = 9;
+        let envSpeedY = 7;
         let isDead = false;
 
-        // 1. Amor následuje kurzor
+        // --- AUDIO ENGINE ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playShootSound() {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.15);
+        }
+
+        function playHitSound() {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+        }
+
+        // --- LOGIKA ---
         document.addEventListener('mousemove', (e) => {
             cupid.style.left = e.clientX + 'px';
             cupid.style.top = e.clientY + 'px';
         });
 
-        // 2. Pohyb obálky
         function moveEnvelope() {
             if (!isDead) {
                 envX += envSpeedX;
                 envY += envSpeedY;
-
-                if (envX <= 0 || envX >= window.innerWidth - 40) envSpeedX *= -1;
-                if (envY <= 0 || envY >= window.innerHeight - 25) envSpeedY *= -1;
-
+                if (envX <= 0 || envX >= window.innerWidth - 45) envSpeedX *= -1;
+                if (envY <= 0 || envY >= window.innerHeight - 30) envSpeedY *= -1;
                 envelope.style.left = envX + 'px';
                 envelope.style.top = envY + 'px';
             }
             requestAnimationFrame(moveEnvelope);
         }
 
-        // 3. Střelba šípu
         document.addEventListener('mousedown', (e) => {
+            initAudio();
             if (isDead) return;
+
+            playShootSound();
 
             const arrow = document.createElement('div');
             arrow.className = 'arrow';
-            
-            // Počáteční pozice u Amora
-            let startX = e.clientX + 30;
+            let startX = e.clientX + 40;
             let startY = e.clientY;
-            
             arrow.style.left = startX + 'px';
             arrow.style.top = startY + 'px';
             document.body.appendChild(arrow);
 
-            // Výpočet směru k obálce v momentě výstřelu
-            const targetX = envX + 20;
-            const targetY = envY + 12;
+            const targetX = envX + 22;
+            const targetY = envY + 15;
             const angle = Math.atan2(targetY - startY, targetX - startX);
-            
             arrow.style.transform = `rotate(${angle}rad)`;
 
             let arrowX = startX;
             let arrowY = startY;
-            const arrowSpeed = 15;
+            const arrowSpeed = 20;
 
             function animateArrow() {
                 arrowX += Math.cos(angle) * arrowSpeed;
                 arrowY += Math.sin(angle) * arrowSpeed;
-
                 arrow.style.left = arrowX + 'px';
                 arrow.style.top = arrowY + 'px';
 
-                // Detekce zásahu
-                const dist = Math.hypot(arrowX - (envX + 20), arrowY - (envY + 12));
-                
-                if (dist < 30) {
-                    explode(envX + 20, envY + 12);
+                const dist = Math.hypot(arrowX - (envX + 22), arrowY - (envY + 15));
+                if (dist < 40) {
+                    playHitSound();
+                    explode(envX + 22, envY + 15);
                     arrow.remove();
                     return;
                 }
 
-                // Odstranění šípu mimo obrazovku
-                if (arrowX < 0 || arrowX > window.innerWidth || arrowY < 0 || arrowY > window.innerHeight) {
+                if (arrowX < -50 || arrowX > window.innerWidth + 50 || arrowY < -50 || arrowY > window.innerHeight + 50) {
                     arrow.remove();
                 } else {
                     requestAnimationFrame(animateArrow);
@@ -284,12 +297,11 @@
             requestAnimationFrame(animateArrow);
         });
 
-        // 4. Výbuch srdíček
         function explode(x, y) {
             isDead = true;
             envelope.style.display = 'none';
 
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 60; i++) {
                 const p = document.createElement('div');
                 p.className = 'particle';
                 p.innerHTML = '❤';
@@ -298,7 +310,7 @@
                 document.body.appendChild(p);
 
                 const angle = Math.random() * Math.PI * 2;
-                const speed = 2 + Math.random() * 10;
+                const speed = 3 + Math.random() * 10;
                 let vx = Math.cos(angle) * speed;
                 let vy = Math.sin(angle) * speed;
                 let px = x;
@@ -306,27 +318,22 @@
                 let op = 1;
 
                 function animP() {
-                    px += vx;
-                    py += vy;
-                    vy += 0.2; // gravitace
-                    op -= 0.01;
+                    px += vx; py += vy; vy += 0.3; op -= 0.02;
                     p.style.left = px + 'px';
                     p.style.top = py + 'px';
                     p.style.opacity = op;
-
                     if (op > 0) requestAnimationFrame(animP);
                     else p.remove();
                 }
                 animP();
             }
 
-            // Respawn
             setTimeout(() => {
                 isDead = false;
-                envX = Math.random() * (window.innerWidth - 50);
-                envY = Math.random() * (window.innerHeight - 50);
+                envX = Math.random() * (window.innerWidth - 60);
+                envY = Math.random() * (window.innerHeight - 60);
                 envelope.style.display = 'flex';
-            }, 2000);
+            }, 1500);
         }
 
         moveEnvelope();
