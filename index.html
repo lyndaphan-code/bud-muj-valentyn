@@ -3,168 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Romantická Trefa</title>
+    <title>Buď můj Valentýn</title>
     <style>
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            background: radial-gradient(circle, #ffdde1, #ee9ca7);
+            /* Tmavší, magičtější pozadí, aby vynikla zlatá */
+            background: radial-gradient(circle at center, #6a3093 0%, #a044ff 100%);
             height: 100vh;
-            cursor: none; /* Skryje výchozí kurzor */
+            cursor: none;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             user-select: none;
         }
 
-        /* --- VLASTNÍ KURZOR (ŠÍP) --- */
+        /* --- VLASTNÍ KURZOR (VYLEPŠENÝ ŠÍP) --- */
         #custom-cursor {
             position: fixed;
-            pointer-events: none; /* Aby kurzor neblokoval interakce */
-            width: 50px;
-            height: 50px;
+            pointer-events: none;
+            width: 60px; /* Prodloužen pro pírka */
+            height: 30px;
             z-index: 1000;
-            transform: translate(-50%, -50%) rotate(-45deg); /* Natočení šípu */
-            transition: transform 0.1s ease-out;
-            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
+            /* Výchozí rotace pro let do šikma */
+            transform: translate(-50%, -50%) rotate(-30deg);
+            filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.4));
         }
 
-        /* Vzhled šípu pomocí CSS/SVG */
         .arrow-shaft {
             position: absolute;
-            top: 22px;
-            left: 0;
-            width: 40px;
+            top: 13px;
+            left: 10px;
+            width: 45px;
             height: 4px;
-            background-color: #8B4513;
+            background: linear-gradient(to right, #8B4513, #A0522D);
             border-radius: 2px;
         }
 
         .arrow-head {
             position: absolute;
-            top: 14px;
-            right: 2px;
+            top: 5px;
+            right: 0;
             width: 0;
             height: 0;
-            border-left: 15px solid #d63031;
+            border-left: 20px solid #c0392b;
             border-top: 10px solid transparent;
             border-bottom: 10px solid transparent;
+            filter: drop-shadow(1px 1px 0px #7c241c);
         }
 
-        .arrow-fletching {
+        /* Nová, detailnější pírka na konci */
+        .fletching {
             position: absolute;
-            top: 18px;
-            left: -5px;
-            width: 10px;
-            height: 12px;
-            background: pink;
-            clip-path: polygon(100% 0, 0 50%, 100% 100%, 70% 50%);
+            width: 25px;
+            height: 10px;
+            /* Textura pírka pomocí gradientu */
+            background: repeating-linear-gradient(45deg, #e74c3c, #e74c3c 2px, #c0392b 2px, #c0392b 4px);
+            /* Vystřižení tvaru pírka */
+            clip-path: polygon(0% 20%, 100% 0%, 80% 100%, 20% 80%);
+            border-radius: 2px;
         }
 
-        /* --- LÉTAJÍCÍ OBÁLKA --- */
+        .fletching.top {
+            top: 2px;
+            left: -5px;
+            transform: rotate(-15deg);
+        }
+        
+        .fletching.bottom {
+            bottom: 2px;
+            left: -5px;
+            transform: scaleY(-1) rotate(-15deg); /* Zrcadlově otočené spodní pírko */
+        }
+
+
+        /* --- ZLATONKOVÁ OBÁLKA --- */
         #envelope-container {
             position: absolute;
-            width: 100px;
-            height: 70px;
-            transition: opacity 0.3s;
-            /* Animace letu definována v JS pro náhodnost, nebo CSS pro plynulost */
+            /* ZMENŠENO: Tělo je mnohem menší */
+            width: 50px;
+            height: 35px;
+            transition: opacity 0.2s;
         }
 
         .envelope-body {
             position: relative;
             width: 100%;
             height: 100%;
-            background-color: #f7f1e3;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            /* ZLATÝ STYL: Kovový gradient */
+            background: linear-gradient(135deg, #ffd700 0%, #fdb931 50%, #daa520 100%);
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), inset 0 0 5px rgba(255,255,255,0.5);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 10;
+            border: 1px solid #b8860b;
         }
 
-        /* Klopa obálky */
         .envelope-body::after {
+            /* Klopa obálky - přizpůsobena menší velikosti a zlaté barvě */
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 0;
-            height: 0;
-            border-left: 50px solid transparent;
-            border-right: 50px solid transparent;
-            border-top: 35px solid #d1ccc0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-top: 20px solid #c59410; /* Tmavší zlatá */
             z-index: 11;
         }
 
-        /* Srdíčko na obálce */
         .heart-seal {
             position: absolute;
-            top: 20px;
+            top: 10px;
             z-index: 12;
-            color: #e84393;
-            font-size: 24px;
-            animation: pulse 1s infinite alternate;
+            color: #ff0000;
+            font-size: 14px;
+            text-shadow: 0 0 5px #fff;
+            animation: pulse 0.5s infinite alternate; /* Rychlejší pulzování */
         }
 
-        /* Křídla */
+        /* KŘÍDLA - ZVĚTŠENA a zrychlena */
         .wing {
             position: absolute;
-            top: 10px;
-            width: 60px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50% 50% 0 0;
-            border: 1px solid #ddd;
+            top: -15px; /* Posunuto výš nad malé tělo */
+            width: 90px; /* O HODNĚ VĚTŠÍ */
+            height: 35px;
+            /* Průsvitná, blanitá zlatá křídla */
+            background: rgba(255, 248, 220, 0.7);
+            border-radius: 50% 80% 0 30%;
+            border: 2px solid rgba(255, 215, 0, 0.8); /* Zlatý okraj */
             z-index: 5;
+             /* Velmi rychlé mávání (flutter efekt) */
+            animation-duration: 0.08s !important;
         }
 
         .wing.left {
-            left: -40px;
+            left: -80px;
             transform-origin: right center;
-            animation: flap-left 0.2s infinite alternate;
+            animation: flap-left infinite alternate;
         }
 
         .wing.right {
-            right: -40px;
+            right: -80px;
             transform-origin: left center;
-            animation: flap-right 0.2s infinite alternate;
+            transform: scaleX(-1); /* Zrcadlení pro pravé křídlo */
+            animation: flap-right infinite alternate;
         }
 
         /* --- EFEKTY --- */
         .particle {
             position: absolute;
             pointer-events: none;
-            font-size: 20px;
-            color: #ff4757;
+            /* Různé velikosti srdíček pro lepší efekt */
+            font-size: 15px;
+            color: #ff3366;
             will-change: transform, opacity;
+            filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));
         }
 
-        /* --- INSTRUKCE --- */
         .instructions {
             position: absolute;
             bottom: 20px;
             width: 100%;
             text-align: center;
-            color: #636e72;
-            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
             pointer-events: none;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
         /* --- ANIMACE --- */
+        /* Upravené úhly pro zběsilejší mávání */
         @keyframes flap-left {
-            from { transform: rotate(-20deg); }
-            to { transform: rotate(10deg); }
+            from { transform: rotate(-35deg); }
+            to { transform: rotate(25deg); }
         }
 
         @keyframes flap-right {
-            from { transform: rotate(20deg); }
-            to { transform: rotate(-10deg); }
+            from { transform: scaleX(-1) rotate(-35deg); }
+            to { transform: scaleX(-1) rotate(25deg); }
         }
 
         @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.2); }
+            from { transform: scale(1); opacity: 0.8; }
+            to { transform: scale(1.3); opacity: 1; }
         }
 
     </style>
@@ -172,7 +194,8 @@
 <body>
 
     <div id="custom-cursor">
-        <div class="arrow-fletching"></div>
+        <div class="fletching top"></div>
+        <div class="fletching bottom"></div>
         <div class="arrow-shaft"></div>
         <div class="arrow-head"></div>
     </div>
@@ -185,41 +208,63 @@
         </div>
     </div>
 
-    <div class="instructions">Tref Amorkovým šípem létající psaníčko!</div>
+    <div class="instructions">Chyť zlaté psaníčko, pokud to dokážeš!</div>
 
     <script>
-        // Nastavení proměnných
         const cursor = document.getElementById('custom-cursor');
         const envelope = document.getElementById('envelope-container');
         let envelopeX = window.innerWidth / 2;
         let envelopeY = window.innerHeight / 2;
-        let speedX = 3;
-        let speedY = 2;
+        
+        // ZRYCHLENÍ: Vyšší základní rychlost
+        let speedX = 7;
+        let speedY = 5;
         let isExploding = false;
 
-        // 1. Logika vlastního kurzoru
+        // 1. Logika kurzoru (s lehkým natočením podle pohybu)
+        let lastMouseX = 0;
+        let lastMouseY = 0;
         document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
             
-            // Náklon šípu podle směru pohybu (volitelné vylepšení)
-            // Pro jednoduchost necháme fixní úhel pro lepší "trefování"
+            // Výpočet úhlu pro natočení šípu ve směru pohybu
+            const deltaX = mouseX - lastMouseX;
+            const deltaY = mouseY - lastMouseY;
+            const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+            // Základní rotace + jemné doladění podle směru pohybu
+            if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) {
+                 cursor.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+            }
+           
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
         });
 
         // 2. Pohyb obálky
         function moveEnvelope() {
-            if (isExploding) return; // Zastavit pohyb při zásahu
+            if (isExploding) return;
 
             envelopeX += speedX;
             envelopeY += speedY;
 
-            // Odrazy od stěn
-            if (envelopeX + 100 > window.innerWidth || envelopeX < 0) {
+            // Odrážení od stěn (s korekcí pro novou velikost)
+            if (envelopeX + 50 > window.innerWidth || envelopeX < 0) {
                 speedX *= -1;
+                 // Občasná náhodná změna rychlosti při odrazu pro "zlatonkovský" efekt
+                speedX += (Math.random() - 0.5) * 2;
             }
-            if (envelopeY + 70 > window.innerHeight || envelopeY < 0) {
+            if (envelopeY + 35 > window.innerHeight || envelopeY < 0) {
                 speedY *= -1;
+                speedY += (Math.random() - 0.5) * 2;
             }
+
+            // Udržení rychlosti v rozumných mezích
+            speedX = Math.min(Math.max(speedX, -10), 10);
+            speedY = Math.min(Math.max(speedY, -8), 8);
 
             envelope.style.left = envelopeX + 'px';
             envelope.style.top = envelopeY + 'px';
@@ -231,66 +276,71 @@
         // 3. Detekce kolize
         function checkCollision() {
             const cursorRect = cursor.getBoundingClientRect();
-            const envelopeRect = envelope.getBoundingClientRect();
+            // Pro kolizi používáme jen malé tělo obálky, ne obří křídla
+            const envelopeBody = envelope.querySelector('.envelope-body');
+            const envelopeRect = envelopeBody.getBoundingClientRect();
 
-            // Zmenšíme oblast zásahu trochu dovnitř, aby to bylo přesnější (hitbox)
-            const overlap = !(cursorRect.right < envelopeRect.left || 
-                            cursorRect.left > envelopeRect.right || 
-                            cursorRect.bottom < envelopeRect.top || 
-                            cursorRect.top > envelopeRect.bottom);
+            // Menší hitbox pro přesnější trefu do středu
+            const padding = 10;
+            const overlap = !(cursorRect.right - padding < envelopeRect.left || 
+                            cursorRect.left + padding > envelopeRect.right || 
+                            cursorRect.bottom - padding < envelopeRect.top || 
+                            cursorRect.top + padding > envelopeRect.bottom);
 
             if (overlap && !isExploding) {
-                triggerExplosion(envelopeRect.left + 50, envelopeRect.top + 35);
+                triggerExplosion(envelopeRect.left + 25, envelopeRect.top + 17.5);
             }
         }
 
-        // 4. Efekt exploze srdíček
+        // 4. VYLEPŠENÁ EXPLOZE
         function triggerExplosion(x, y) {
             isExploding = true;
-            
-            // Skryj obálku
             envelope.style.opacity = '0';
-            envelope.style.transform = 'scale(0)';
-
-            // Vytvoř srdíčka
-            const particleCount = 40;
+            
+            // ZVÝŠENÝ POČET ČÁSTIC
+            const particleCount = 150; 
             for (let i = 0; i < particleCount; i++) {
                 createParticle(x, y);
             }
 
-            // Reset hry po chvíli
             setTimeout(() => {
                 resetEnvelope();
-            }, 2000);
+            }, 1500); // Rychlejší respawn
         }
 
         function createParticle(x, y) {
             const particle = document.createElement('div');
             particle.classList.add('particle');
-            particle.innerHTML = '❤'; // Nebo jiný znak
+            particle.innerHTML = Math.random() > 0.5 ? '❤' : '💖'; // Mix srdíček
+            // Náhodná velikost částic
+            particle.style.fontSize = (10 + Math.random() * 20) + 'px';
             document.body.appendChild(particle);
 
-            // Náhodný směr a rychlost
             const angle = Math.random() * Math.PI * 2;
-            const velocity = 2 + Math.random() * 8;
+            // VĚTŠÍ ROZPTYL: Vyšší počáteční rychlost
+            const velocity = 5 + Math.random() * 20; 
             let velX = Math.cos(angle) * velocity;
             let velY = Math.sin(angle) * velocity;
             
             let posX = x;
             let posY = y;
             let opacity = 1;
+            // Silnější gravitace pro dramatičtější pád
+            const gravity = 0.3 + Math.random() * 0.2;
 
             function animateParticle() {
-                velY += 0.2; // Gravitace
+                velY += gravity; 
                 posX += velX;
                 posY += velY;
-                opacity -= 0.015; // Mizení
+                // Pomalejší mizení
+                opacity -= 0.01; 
 
                 particle.style.left = posX + 'px';
                 particle.style.top = posY + 'px';
                 particle.style.opacity = opacity;
+                particle.style.transform = `rotate(${posX*2}deg)`; // Rotace při pádu
 
-                if (opacity > 0 && posY < window.innerHeight) {
+                if (opacity > 0 && posY < window.innerHeight + 50) {
                     requestAnimationFrame(animateParticle);
                 } else {
                     particle.remove();
@@ -302,26 +352,23 @@
 
         // 5. Reset hry
         function resetEnvelope() {
-            // Náhodná pozice
             envelopeX = Math.random() * (window.innerWidth - 100);
-            envelopeY = Math.random() * (window.innerHeight - 70);
+            envelopeY = Math.random() * (window.innerHeight - 100);
             
-            // Náhodný směr
-            speedX = (Math.random() - 0.5) * 8;
-            speedY = (Math.random() - 0.5) * 8;
+            // Náhodný směr a VYŠŠÍ rychlost při resetu
+            speedX = (Math.random() > 0.5 ? 1 : -1) * (6 + Math.random() * 4);
+            speedY = (Math.random() > 0.5 ? 1 : -1) * (4 + Math.random() * 4);
 
             envelope.style.left = envelopeX + 'px';
             envelope.style.top = envelopeY + 'px';
-            
-            // Zobrazit
             envelope.style.opacity = '1';
-            envelope.style.transform = 'scale(1)';
             
             isExploding = false;
             moveEnvelope();
         }
 
-        // Start
+        // Přidána lehká rotace šípu při startu
+        cursor.style.transform = `translate(-50%, -50%) rotate(-30deg)`;
         moveEnvelope();
 
     </script>
