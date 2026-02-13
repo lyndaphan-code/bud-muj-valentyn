@@ -327,4 +327,23 @@
                     px += vx; py += vy; vy += 0.5;
                     p.style.left = px + 'px';
                     p.style.top = py + 'px';
-                    p.style.opacity =
+                    p.style.opacity = (p.style.opacity || 1) - 0.02;
+                    if(p.style.opacity > 0) requestAnimationFrame(animP);
+                    else p.remove();
+                }
+                animP();
+            }
+
+            setTimeout(() => {
+                isDead = false;
+                envX = Math.random() * (window.innerWidth - 150) + 50;
+                envY = Math.random() * (window.innerHeight - 150) + 50;
+                envelope.style.display = 'flex';
+            }, 1500);
+        }
+
+        // Spuštění
+        update();
+    </script>
+</body>
+</html>
